@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 
 namespace verifyISBN
@@ -58,16 +59,16 @@ namespace verifyISBN
         static List<string> GetISBNfromFile(string fileName, bool debug)
         {
             List<string> ret = [];
+            StreamReader? reader = null;
             try
             {
-                StreamReader reader = new(fileName);
+                reader = new(fileName);
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     if (debug) Console.WriteLine("Lettura: aggiungo [" + line + "] alla lista");
                     ret.Add(line);
                 }
-                reader.Close();
             }
             catch (FileNotFoundException)
             {
@@ -76,6 +77,10 @@ namespace verifyISBN
             catch (IOException)
             {
                 Console.Error.WriteLine($"errore apertura file {fileName}");
+            }
+            finally
+            {
+                reader?.Close();
             }
             return ret;
         }
