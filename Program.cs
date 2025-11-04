@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
@@ -9,6 +10,10 @@ namespace verifyISBN
 {
     class Program
     {
+        static bool VerifyISBN(string ISBN)
+        {
+            return VerifyISBN(ISBN, false);
+        }
         static bool VerifyISBN(string ISBN, bool debug)
         {
             if (ISBN == null)
@@ -171,15 +176,95 @@ namespace verifyISBN
             }
         }
 
+        static int GetInt(string s)
+        {
+            Console.WriteLine(s);
+            return GetInt();
+        }
+
+        static int GetInt()
+        {
+            try
+            {
+                return Int32.Parse(GetString());
+            }
+            catch (FormatException)
+            {
+                Console.Error.WriteLine("devi inserire un numero intero");
+                return GetInt();
+            }
+        }
+
         static string GeneratePattern(string path)
         {
             return "../../../" + path;
         }
 
-        static void Main(string[] args)
+        static void verify()
         {
             AddNewISBN();
             VerifyAllISBN(GetISBNfromFile(GeneratePattern("data/ISBN.txt"), false));
+        }
+
+        static void complete(string ISBN)
+        {
+            complete(ISBN, false);
+        }
+        static void complete(string ISBN, bool debug)
+        {
+            if (ISBN == null)
+            {
+                Console.WriteLine("la stringa passata è nulla");
+                return;
+            }
+            if (ISBN.Length != 12)
+            {
+                Console.WriteLine("la stringa passata non è della dimensione corretta");
+                return;
+            }
+            int pari = 0;
+            int dispari = 0;
+            try
+            {
+                for (int i = 0; i < ISBN.Length; i++)
+                {
+                    int j = Int32.Parse(ISBN[i].ToString());
+                    if (debug) Console.WriteLine($"ISBN alla cifra {i + 1}: {j}");
+                    if (i % 2 == 0)
+                    {
+                        dispari += j;
+                    }
+                    else
+                    {
+                        pari += j;
+                    }
+                }
+                int total = dispari + (pari * 3);
+                int lastDigit = 0;
+                if (total % 10 != 0)
+                {
+                    lastDigit = 10 - (total % 10);
+                }
+                Console.WriteLine($"la cifra da aggiungere a {ISBN} per completarlo è {lastDigit}, per cui l'ISBN completo è {ISBN}{lastDigit}");
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("devi iserire un ISBN (codice identificativo numerico)");
+                return;
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            switch(GetInt("quale modalità vuoi avviare?\n\t1)\tverificare gli ISBN\n\t2)\tcompletare un ISBN"))
+            {
+                case 1:
+                    verify();
+                    break;
+                case 2:
+                    complete(GetString("inserisci le 12 cifre del codice ISBN da completare"));
+                    break;
+            }
         }
     }
 }
