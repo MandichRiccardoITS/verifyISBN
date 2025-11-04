@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 
-namespace HelloWorld
+namespace verifyISBN
 {
     class Program
     {
-        static bool verifyISBN(string ISBN, bool debug)
+        static bool VerifyISBN(string ISBN, bool debug)
         {
             if (ISBN == null)
             {
@@ -54,15 +55,15 @@ namespace HelloWorld
             }
         }
 
-        static List<string> getISBNfromFile(string fileName, bool debug)
+        static List<string> GetISBNfromFile(string fileName, bool debug)
         {
-            List<string> ret = new List<string>();
+            List<string> ret = [];
             try
             {
-                StreamReader reader = new StreamReader(fileName);
-                while (!reader.EndOfStream)
+                StreamReader reader = new(fileName);
+                string line;
+                while ((line = reader.ReadLine()) != null)
                 {
-                    string line = reader.ReadLine();
                     if (debug) Console.WriteLine("Lettura: aggiungo [" + line + "] alla lista");
                     ret.Add(line);
                 }
@@ -83,10 +84,10 @@ namespace HelloWorld
         {
             //Console.WriteLine("inserire ISBN da verificare");
             //string ISBN = Console.ReadLine();
-            List<string> ISBN = getISBNfromFile("ISBN.txt", false);
+            List<string> ISBN = GetISBNfromFile("ISBN.txt", false);
             foreach (string s in ISBN)
             {
-                Console.WriteLine($"{s}:\t{verifyISBN(s, false)}");
+                Console.WriteLine($"{s}:\t{VerifyISBN(s, false)}");
             }
         }
     }

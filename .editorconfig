@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# IDE0210: Converti in istruzioni di primo livello
+dotnet_diagnostic.IDE0210.severity = silent
