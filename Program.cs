@@ -119,12 +119,7 @@ namespace verifyISBN
             Console.WriteLine("esco dalla modalità inserimento\ninizio a salvare i nuovi dati su file");
             SetISBNonFile(GeneratePattern("data/ISBN.txt"), ISBN);
         }
-
         static void SetISBNonFile(string filename, List<string> ISBN)
-        {
-            SetISBNonFile(filename, ISBN, false);
-        }
-        static void SetISBNonFile(string filename, List<string> ISBN, bool debug)
         {
             StreamWriter writer;
             try
