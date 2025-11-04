@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
@@ -56,6 +57,10 @@ namespace verifyISBN
             }
         }
 
+        static List<string> GetISBNfromFile(string filename)
+        {
+            return GetISBNfromFile(filename, false);
+        }
         static List<string> GetISBNfromFile(string fileName, bool debug)
         {
             List<string> ret = [];
@@ -95,12 +100,50 @@ namespace verifyISBN
 
         static void AddNewISBN()
         {
+            if(!GetBool("vuoi aggiungere nuovi ISBN?"))
+            {
+                return;
+            }
+            List<string> ISBN = GetISBNfromFile(GeneratePattern("data/ISBN.txt"));
+            string line;
+            while((line = GetString("inserisci il nuovo ISBN, se hai finito premi invio lasciondo vuoto")).Length > 0)
+            {
+                Console.WriteLine($"aggiungo {line} all'elenco");
+                ISBN.Add(line);
+            }
+            Console.WriteLine("esco dalla modalità inserimento\ninizio a salvare i nuovi dati su file");
+            SetISBNonFile(GeneratePattern("data/ISBN.txt"), ISBN);
+        }
 
+        static void SetISBNonFile(string filename, List<string> ISBN)
+        {
+            SetISBNonFile(filename, ISBN, false);
+        }
+        static void SetISBNonFile(string filename, List<string> ISBN, bool debug)
+        {
+            StreamWriter writer;
+            try
+            {
+                writer = new StreamWriter(filename);
+                foreach(string s in ISBN)
+                {
+                    writer.WriteLine(s);
+                }
+                writer.Close();
+            }
+            catch (FileNotFoundException)
+            {
+                Console.Error.WriteLine($"file {filename} non trovato");
+            }
+            catch (IOException)
+            {
+                Console.Error.WriteLine($"errore di lettura/scrittura su {filename}");
+            }
         }
 
         static string GetString(string s)
         {
-            Console.WriteLine("inserisci una stringa");
+            Console.WriteLine(s);
             return GetString();
         }
 
@@ -109,10 +152,34 @@ namespace verifyISBN
             return Console.ReadLine();
         }
 
+        static bool GetBool(string s)
+        {
+            Console.WriteLine(s);
+            return GetBool();
+        }
+
+        static bool GetBool()
+        {
+            try
+            {
+                return Boolean.Parse(GetString());
+            }
+            catch (FormatException)
+            {
+                Console.Error.WriteLine("devi inserire un valore buooleano\t(true per sì e false per no)");
+                return GetBool();
+            }
+        }
+
+        static string GeneratePattern(string path)
+        {
+            return "../../../" + path;
+        }
+
         static void Main(string[] args)
         {
             AddNewISBN();
-            VerifyAllISBN(GetISBNfromFile("ISBN.txt", false));
+            VerifyAllISBN(GetISBNfromFile(GeneratePattern("data/ISBN.txt"), false));
         }
     }
 }
