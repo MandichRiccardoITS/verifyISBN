@@ -85,15 +85,34 @@ namespace verifyISBN
             return ret;
         }
 
-        static void Main(string[] args)
+        static void VerifyAllISBN(List<string> ISBN)
         {
-            //Console.WriteLine("inserire ISBN da verificare");
-            //string ISBN = Console.ReadLine();
-            List<string> ISBN = GetISBNfromFile("ISBN.txt", false);
             foreach (string s in ISBN)
             {
                 Console.WriteLine($"{s}:\t{VerifyISBN(s, false)}");
             }
+        }
+
+        static void AddNewISBN()
+        {
+
+        }
+
+        static string GetString(string s)
+        {
+            Console.WriteLine("inserisci una stringa");
+            return GetString();
+        }
+
+        static string GetString()
+        {
+            return Console.ReadLine();
+        }
+
+        static void Main(string[] args)
+        {
+            AddNewISBN();
+            VerifyAllISBN(GetISBNfromFile("ISBN.txt", false));
         }
     }
 }
