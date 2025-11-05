@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 
 namespace verifyISBN
 {
-    class Program
+    class Completo
     {
         static bool VerifyISBN(string ISBN)
         {

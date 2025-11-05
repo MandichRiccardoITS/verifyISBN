@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0060:Rimuovere il parametro inutilizzato", Justification = "<In sospeso>", Scope = "member", Target = "~M:verifyISBN.Program.Main(System.String[])")]
+[assembly: SuppressMessage("Style", "IDE0060:Rimuovere il parametro inutilizzato", Justification = "<In sospeso>", Scope = "member", Target = "~M:verifyISBN.Completo.Main(System.String[])")]
