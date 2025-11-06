@@ -62,6 +62,16 @@ namespace verifyISBN
             }
         }
 
+
+
+        static List<string> GetISBNfromFile()
+        {
+            return GetISBNfromFile(false);
+        }
+        static List<string> GetISBNfromFile(bool debug)
+        {
+            return GetISBNfromFile(GeneratePattern("data/ISBN.txt"), debug);
+        }
         static List<string> GetISBNfromFile(string filename)
         {
             return GetISBNfromFile(filename, false);
@@ -95,6 +105,11 @@ namespace verifyISBN
             return ret;
         }
 
+        static void VerifyAllISBN()
+        {
+            VerifyAllISBN(GetISBNfromFile());
+        }
+
         static void VerifyAllISBN(List<string> ISBN)
         {
             foreach (string s in ISBN)
@@ -105,11 +120,16 @@ namespace verifyISBN
 
         static void AddNewISBN()
         {
+            List<string> ISBN = GetISBNfromFile(GeneratePattern("data/ISBN.txt"));
+            Console.WriteLine("ISBN già presenti nel file:");
+            foreach (string s in ISBN)
+            {
+                Console.WriteLine(s);
+            }
             if(!GetBool("vuoi aggiungere nuovi ISBN?"))
             {
                 return;
             }
-            List<string> ISBN = GetISBNfromFile(GeneratePattern("data/ISBN.txt"));
             string line;
             while((line = GetString("inserisci il nuovo ISBN, se hai finito premi invio lasciondo vuoto")).Length > 0)
             {
@@ -117,6 +137,7 @@ namespace verifyISBN
                 ISBN.Add(line);
             }
             Console.WriteLine("esco dalla modalità inserimento\ninizio a salvare i nuovi dati su file");
+            ISBN.Sort();
             SetISBNonFile(GeneratePattern("data/ISBN.txt"), ISBN);
         }
         static void SetISBNonFile(string filename, List<string> ISBN)
@@ -195,12 +216,6 @@ namespace verifyISBN
             return "../../../" + path;
         }
 
-        static void verify()
-        {
-            AddNewISBN();
-            VerifyAllISBN(GetISBNfromFile(GeneratePattern("data/ISBN.txt"), false));
-        }
-
         static void complete(string ISBN)
         {
             complete(ISBN, false);
@@ -251,15 +266,36 @@ namespace verifyISBN
 
         static void Main(string[] args)
         {
-            switch(GetInt("quale modalità vuoi avviare?\n\t1)\tverificare gli ISBN\n\t2)\tcompletare un ISBN"))
+            bool running;
+            do
             {
-                case 1:
-                    verify();
-                    break;
-                case 2:
-                    complete(GetString("inserisci le 12 cifre del codice ISBN da completare"));
-                    break;
-            }
+                running = true;
+                switch (GetInt("cosa vuoi fare?\n" +
+                    "\t1)\taggiungere uno o più ISBN al file\n" +
+                    "\t2)\tverificare tutti gli ISBN del file\n" +
+                    "\t3)\tverificare un singolo ISBN\n" +
+                    "\t4)\tcompletare un ISBN con la 13° cifra (cifra di controllo)\n" +
+                    "\t5)\tuscire dal programma\n"
+                    ))
+                {
+                    case 1:
+                        AddNewISBN();
+                        break;
+                    case 2:
+                        VerifyAllISBN();
+                        break;
+                    case 3:
+                        string isbn = GetString("inserisci l'ISBN da verificare");
+                        Console.WriteLine($"{isbn}:\t{VerifyISBN(isbn)}");
+                        break;
+                    case 4:
+                        complete(GetString("inserisci le 12 cifre dell'ISBN da completare"));
+                        break;
+                    case 5:
+                        running = false;
+                        break;
+                }
+            } while (running);
         }
     }
 }
