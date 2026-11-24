@@ -129,12 +129,12 @@ namespace verifyISBN
             {
                 Console.WriteLine(s);
             }
-            if (!GetBool("vuoi aggiungere nuovi ISBN?"))
+            if (!Input.GetBool("vuoi aggiungere nuovi ISBN?"))
             {
                 return;
             }
             string line;
-            while ((line = GetString("inserisci il nuovo ISBN, se hai finito premi invio lasciando vuoto")).Length > 0)
+            while ((line = Input.GetString("inserisci il nuovo ISBN, se hai finito premi invio lasciando vuoto")).Length > 0)
             {
                 Console.WriteLine($"aggiungo {line} all'elenco");
                 ISBN.Add(line);
@@ -160,7 +160,7 @@ namespace verifyISBN
                 Console.WriteLine($"{i + 1})\t{ISBN[i]}");
             }
 
-            int choice = GetInt("Inserisci il numero dell'ISBN da rimuovere (0 per annullare)");
+            int choice = Input.GetInt("Inserisci il numero dell'ISBN da rimuovere (0 per annullare)");
             
             if (choice == 0)
             {
@@ -259,7 +259,7 @@ namespace verifyISBN
 
         static async Task VerifyAndGetBookInfo()
         {
-            string isbn = GetString("inserisci l'ISBN da verificare");
+            string isbn = Input.GetString("inserisci l'ISBN da verificare");
             
             if (!VerifyISBN(isbn))
             {
@@ -339,55 +339,6 @@ namespace verifyISBN
             }
         }
 
-        static string GetString(string s)
-        {
-            Console.WriteLine(s);
-            return GetString();
-        }
-
-        static string GetString()
-        {
-            return Console.ReadLine();
-        }
-
-        static bool GetBool(string s)
-        {
-            Console.WriteLine(s);
-            return GetBool();
-        }
-
-        static bool GetBool()
-        {
-            try
-            {
-                return Boolean.Parse(GetString());
-            }
-            catch (FormatException)
-            {
-                Console.Error.WriteLine("devi inserire un valore booleano\t(true per sì e false per no)");
-                return GetBool();
-            }
-        }
-
-        static int GetInt(string s)
-        {
-            Console.WriteLine(s);
-            return GetInt();
-        }
-
-        static int GetInt()
-        {
-            try
-            {
-                return Int32.Parse(GetString());
-            }
-            catch (FormatException)
-            {
-                Console.Error.WriteLine("devi inserire un numero intero");
-                return GetInt();
-            }
-        }
-
         static string GeneratePattern(string path)
         {
             return "../../../" + path;
@@ -448,7 +399,7 @@ namespace verifyISBN
             do
             {
                 running = true;
-                int choice = GetInt("cosa vuoi fare?\n" +
+                int choice = Input.GetInt("cosa vuoi fare?\n" +
                     "\t1)\taggiungere uno o più ISBN al file\n" +
                     "\t2)\trimuovere un ISBN dal file\n" +
                     "\t3)\tsvuotare il file mantenendo un file di backup\n" +
@@ -480,7 +431,7 @@ namespace verifyISBN
                         await VerifyAndGetBookInfo();
                         break;
                     case 7:
-                        complete(GetString("inserisci le 12 cifre dell'ISBN da completare"));
+                        complete(Input.GetString("inserisci le 12 cifre dell'ISBN da completare"));
                         break;
                     case 0:
                         running = false;
